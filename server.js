@@ -16,7 +16,6 @@ const collectibles = [
 ];
 
 
-
 app.listen(3000, () => {
     console.log('Listening on port 3000')
   })
@@ -47,15 +46,46 @@ app.get(`/collectibles/:index`, (req, res) => {
         res.send(`This item is not yet in stock, Check back soon!`)
     }
     else {
-        console.log(collectibles[index].name)
         res.send(`So you want the ${collectibles[index].name}? For, $${collectibles[index].price} it can be yours!`)
     }
 })
 
-app.get(`/shoes`, (req, res) => {
-    const name = req.query.name
-    const price = req.query.price 
-    const type = req.query.type 
+// const name = req.query.name
+// const price = req.query.price 
+// const type = req.query.type 
+// const minPrice = Math.min(shoes.price)
+// const maxPrice = Math.max(shoes.price)
 
-    res.send(shoes)
+app.get(`/shoes`, (req, res) => {
+    let shoeArray = []
+    console.log(req.query.length)
+    if (req.query.minPrice) {
+        const price = parseInt(req.query.minPrice)
+        shoes.forEach((shoe) => {
+            if (shoe.price > price) {
+                shoeArray.push(shoe)
+            }
+        })
+    } else if (req.query.maxPrice) {
+        const price = parseInt(req.query.maxPrice)
+        shoes.forEach((shoe) => {
+            if (shoe.price < price) {
+                shoeArray.push(shoe)
+            }
+        })
+    } else if (req.query.type) {
+        shoes.forEach((shoe) => {
+            if (shoe.type === req.query.type) {
+                shoeArray.push(shoe)
+            }
+        })
+    } else {
+        shoeArray = shoes
+    }
+    res.send(shoeArray)
 })
+
+// app.get(`/shoes/:type`, (req, res) => {
+//     const type = req.query.type
+   
+// })
